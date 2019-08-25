@@ -15,9 +15,11 @@ def kaldi_gender(gender):
     else:
         return 'm'
     
-def path2utt(path):
+def path2utt(row):
     ''' Convert audio path into utterance id. '''
-    return path[:-4].split('_')[-1]
+    utt_id = row.path[:-4].split('_')[-1]
+    prefix = row.spk_id
+    return f'{prefix}_{utt_id}'
 
 def is_chinese(char):
     ''' Check if character is chinese. '''
@@ -93,14 +95,15 @@ if __name__ == '__main__':
 
     ''' Acoustic '''
 
-    # Prepare gender and speaker id for all CommonVoice clients
-    full_df.gender = full_df.gender.apply(kaldi_gender)
+    # Prepare spk_id, gender and utt_id for all audios
     client_spk = full_df[['client_id']].drop_duplicates()
     client_spk['spk_id'] = range(1, 1 + len(client_spk))
+    client_spk.spk_id = client_spk.spk_id.apply(lambda x: str(x).zfill(3))
     full_df = full_df.merge(client_spk)
+    full_df.gender = full_df.gender.apply(kaldi_gender)
+    full_df['utt_id'] = full_df.apply(path2utt, axis=1)
 
-    # Prepare utterance id and text segmentation for all audios
-    full_df['utt_id'] = full_df.path.apply(path2utt)
+    # Fix unusual character and do text segmentation
     full_df.sentence = full_df.sentence.apply(fix_char)
     full_df.sentence = full_df.sentence.apply(jieba_cut)
 
@@ -112,12 +115,16 @@ if __name__ == '__main__':
     train_df = full_df[:-len(test_df)]
     test_df = full_df[-len(test_df):]
 
+    # Sort train/test set by utt_id for kaldi-mfcc
+    train_df = train_df.sort_values(by='utt_id')
+    test_df = test_df.sort_values(by='utt_id')
 
     # Write acoustic data of train/test set
     for split, df in zip(['train', 'test'], [train_df, test_df]):
         
         # spk2gender
         spk2gender = df[['spk_id', 'gender']].drop_duplicates()
+        spk2gender = spk2gender.sort_values(by='spk_id')
         with open(join('data', split, 'spk2gender'), 'w', encoding='UTF-8') as f:
             for _, row in spk2gender.iterrows():
                 f.write(f'{row.spk_id} {row.gender}\n')
@@ -126,7 +133,7 @@ if __name__ == '__main__':
         with open(join('data', split, 'wav.scp'), 'w', encoding='UTF-8') as f:
             for _, row in df.iterrows():
                 mp3_path = join(DATA_DIR, 'clips', row.path)
-                f.write(f'{row.utt_id} sox {mp3_path} -t wav - |\n')
+                f.write(f'{row.utt_id} sox {mp3_path} -t wav -r 16000 - |\n')
         
         # text
         with open(join('data', split, 'text'), 'w', encoding='UTF-8') as f:
