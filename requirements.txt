@@ -1,5 +1,8 @@
 kaldi
 python3:
     pandas
+    requests
+    beautifulsoup4
+    html5lib
 
 sox    # To convert .mp3 to .wav
