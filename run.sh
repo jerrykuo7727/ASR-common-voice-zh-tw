@@ -48,3 +48,7 @@ steps/make_mfcc.sh --nj $nj --cmd "$train_cmd" data/train \
                         exp/make_mfcc/train $mfccdir
 steps/make_mfcc.sh --nj $nj --cmd "$train_cmd" data/test \
                         exp/make_mfcc/test $mfccdir
+
+# Making cmvn.scp files
+steps/compute_cmvn_stats.sh data/train exp/make_mfcc/train $mfccdir
+steps/compute_cmvn_stats.sh data/test exp/make_mfcc/test $mfccdir
