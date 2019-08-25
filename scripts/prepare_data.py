@@ -93,7 +93,8 @@ if __name__ == '__main__':
     test_df = test_df[test_df.sentence.apply(contains_no_eng)]
     full_df = pd.concat([train_df, test_df])
 
-    ''' Acoustic '''
+
+    ''' Acoustic Model '''
 
     # Prepare spk_id, gender and utt_id for all audios
     client_spk = full_df[['client_id']].drop_duplicates()
@@ -147,7 +148,13 @@ if __name__ == '__main__':
                 f.write(f'{row.utt_id} {row.spk_id}\n')
 
 
-    ''' Language '''
+    ''' Language Model '''
+
+    # corpus.txt
+    corpus = full_df.sentence.apply(' '.join).tolist()
+    with open('data/local/corpus.txt', 'w', encoding='UTF-8') as f:
+        for sent in corpus:
+            f.write(f'{sent}\n')
 
     # lexicon.txt
     phone_set = []
@@ -166,7 +173,7 @@ if __name__ == '__main__':
             f.write(f'{phone}\n')
             
     with open('data/local/dict/silence_phones.txt', 'w', encoding='UTF-8') as f:
-        f.write('sil\nspn')
+        f.write('sil\nspn\n')
         
     with open('data/local/dict/optional_silence.txt', 'w', encoding='UTF-8') as f:
-        f.write('sil')
+        f.write('sil\n')
