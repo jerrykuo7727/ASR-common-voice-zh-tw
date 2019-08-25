@@ -92,3 +92,9 @@ echo
 lang=data/lang
 arpa2fst --disambig-symbol=#0 --read-symbol-table=$lang/words.txt \
                           $local/tmp/lm.arpa $lang/G.fst
+
+echo
+echo "===== MONO TRAINING ====="
+echo
+
+steps/train_mono.sh --nj $nj --cmd "$train_cmd" data/train data/lang exp/mono  || exit 1
