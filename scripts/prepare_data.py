@@ -79,7 +79,7 @@ def word2phones(word):
 
 
 if __name__ == '__main__':
-    jieba.set_dictionary('dict.txt.big')
+    jieba.set_dictionary('scripts/dict.txt.big')
     jieba.initialize()
 
     # Read and merge information of train/test set

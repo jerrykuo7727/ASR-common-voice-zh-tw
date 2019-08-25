@@ -84,3 +84,11 @@ local=data/local
 mkdir $local/tmp
 ngram-count -order $lm_order -write-vocab $local/tmp/vocab-full.txt \
             -wbdiscount -text $local/corpus.txt -lm $local/tmp/lm.arpa
+
+echo
+echo "===== MAKING G.fst ====="
+echo
+
+lang=data/lang
+arpa2fst --disambig-symbol=#0 --read-symbol-table=$lang/words.txt \
+                          $local/tmp/lm.arpa $lang/G.fst
