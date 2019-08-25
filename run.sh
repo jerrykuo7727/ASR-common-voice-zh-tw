@@ -98,3 +98,12 @@ echo "===== MONO TRAINING ====="
 echo
 
 steps/train_mono.sh --nj $nj --cmd "$train_cmd" data/train data/lang exp/mono  || exit 1
+
+echo
+echo "===== MONO DECODING ====="
+echo
+
+utils/mkgraph.sh --mono data/lang exp/mono exp/mono/graph || exit 1
+steps/decode.sh --config conf/decode.config --nj $nj --cmd "$decode_cmd" \
+                exp/mono/graph data/test exp/mono/decode
+local/score.sh data/test data/lang exp/mono/decode/
