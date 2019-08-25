@@ -1,0 +1,5 @@
+kaldi
+python3:
+    pandas
+
+sox    # To convert .mp3 to .wav
