@@ -1,0 +1,495 @@
+
+===== PREPARING REQUIRED DATA =====
+
+
+===== PREPARING ACOUSTIC DATA =====
+
+
+===== FEATURES EXTRACTION =====
+
+steps/make_mfcc.sh --nj 4 --cmd run.pl data/train exp/make_mfcc/train mfcc
+utils/validate_data_dir.sh: Successfully validated data-directory data/train
+steps/make_mfcc.sh: [info]: no segments file exists: assuming wav.scp indexed by utterance.
+steps/make_mfcc.sh: Succeeded creating MFCC features for train
+steps/make_mfcc.sh --nj 4 --cmd run.pl data/test exp/make_mfcc/test mfcc
+utils/validate_data_dir.sh: Successfully validated data-directory data/test
+steps/make_mfcc.sh: [info]: no segments file exists: assuming wav.scp indexed by utterance.
+steps/make_mfcc.sh: Succeeded creating MFCC features for test
+steps/compute_cmvn_stats.sh data/train exp/make_mfcc/train mfcc
+Succeeded creating CMVN stats for train
+steps/compute_cmvn_stats.sh data/test exp/make_mfcc/test mfcc
+Succeeded creating CMVN stats for test
+
+===== PREPARING LANGUAGE DATA =====
+
+utils/prepare_lang.sh data/local/dict <UNK> data/local/lang data/lang
+Checking data/local/dict/silence_phones.txt ...
+--> reading data/local/dict/silence_phones.txt
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> data/local/dict/silence_phones.txt is OK
+
+Checking data/local/dict/optional_silence.txt ...
+--> reading data/local/dict/optional_silence.txt
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> data/local/dict/optional_silence.txt is OK
+
+Checking data/local/dict/nonsilence_phones.txt ...
+--> reading data/local/dict/nonsilence_phones.txt
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> data/local/dict/nonsilence_phones.txt is OK
+
+Checking disjoint: silence_phones.txt, nonsilence_phones.txt
+--> disjoint property is OK.
+
+Checking data/local/dict/lexicon.txt
+--> reading data/local/dict/lexicon.txt
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> data/local/dict/lexicon.txt is OK
+
+Checking data/local/dict/extra_questions.txt ...
+--> data/local/dict/extra_questions.txt is empty (this is OK)
+--> SUCCESS [validating dictionary directory data/local/dict]
+
+**Creating data/local/dict/lexiconp.txt from data/local/dict/lexicon.txt
+prepare_lang.sh: validating output directory
+utils/validate_lang.pl data/lang
+Checking existence of separator file
+separator file data/lang/subword_separator.txt is empty or does not exist, deal in word case.
+Checking data/lang/phones.txt ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> data/lang/phones.txt is OK
+
+Checking words.txt: #0 ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> data/lang/words.txt is OK
+
+Checking disjoint: silence.txt, nonsilence.txt, disambig.txt ...
+--> silence.txt and nonsilence.txt are disjoint
+--> silence.txt and disambig.txt are disjoint
+--> disambig.txt and nonsilence.txt are disjoint
+--> disjoint property is OK
+
+Checking sumation: silence.txt, nonsilence.txt, disambig.txt ...
+--> found no unexplainable phones in phones.txt
+
+Checking data/lang/phones/context_indep.{txt, int, csl} ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> 10 entry/entries in data/lang/phones/context_indep.txt
+--> data/lang/phones/context_indep.int corresponds to data/lang/phones/context_indep.txt
+--> data/lang/phones/context_indep.csl corresponds to data/lang/phones/context_indep.txt
+--> data/lang/phones/context_indep.{txt, int, csl} are OK
+
+Checking data/lang/phones/nonsilence.{txt, int, csl} ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> 508 entry/entries in data/lang/phones/nonsilence.txt
+--> data/lang/phones/nonsilence.int corresponds to data/lang/phones/nonsilence.txt
+--> data/lang/phones/nonsilence.csl corresponds to data/lang/phones/nonsilence.txt
+--> data/lang/phones/nonsilence.{txt, int, csl} are OK
+
+Checking data/lang/phones/silence.{txt, int, csl} ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> 10 entry/entries in data/lang/phones/silence.txt
+--> data/lang/phones/silence.int corresponds to data/lang/phones/silence.txt
+--> data/lang/phones/silence.csl corresponds to data/lang/phones/silence.txt
+--> data/lang/phones/silence.{txt, int, csl} are OK
+
+Checking data/lang/phones/optional_silence.{txt, int, csl} ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> 1 entry/entries in data/lang/phones/optional_silence.txt
+--> data/lang/phones/optional_silence.int corresponds to data/lang/phones/optional_silence.txt
+--> data/lang/phones/optional_silence.csl corresponds to data/lang/phones/optional_silence.txt
+--> data/lang/phones/optional_silence.{txt, int, csl} are OK
+
+Checking data/lang/phones/disambig.{txt, int, csl} ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> 7 entry/entries in data/lang/phones/disambig.txt
+--> data/lang/phones/disambig.int corresponds to data/lang/phones/disambig.txt
+--> data/lang/phones/disambig.csl corresponds to data/lang/phones/disambig.txt
+--> data/lang/phones/disambig.{txt, int, csl} are OK
+
+Checking data/lang/phones/roots.{txt, int} ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> 129 entry/entries in data/lang/phones/roots.txt
+--> data/lang/phones/roots.int corresponds to data/lang/phones/roots.txt
+--> data/lang/phones/roots.{txt, int} are OK
+
+Checking data/lang/phones/sets.{txt, int} ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> 129 entry/entries in data/lang/phones/sets.txt
+--> data/lang/phones/sets.int corresponds to data/lang/phones/sets.txt
+--> data/lang/phones/sets.{txt, int} are OK
+
+Checking data/lang/phones/extra_questions.{txt, int} ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> 9 entry/entries in data/lang/phones/extra_questions.txt
+--> data/lang/phones/extra_questions.int corresponds to data/lang/phones/extra_questions.txt
+--> data/lang/phones/extra_questions.{txt, int} are OK
+
+Checking data/lang/phones/word_boundary.{txt, int} ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> 518 entry/entries in data/lang/phones/word_boundary.txt
+--> data/lang/phones/word_boundary.int corresponds to data/lang/phones/word_boundary.txt
+--> data/lang/phones/word_boundary.{txt, int} are OK
+
+Checking optional_silence.txt ...
+--> reading data/lang/phones/optional_silence.txt
+--> data/lang/phones/optional_silence.txt is OK
+
+Checking disambiguation symbols: #0 and #1
+--> data/lang/phones/disambig.txt has "#0" and "#1"
+--> data/lang/phones/disambig.txt is OK
+
+Checking topo ...
+
+Checking word_boundary.txt: silence.txt, nonsilence.txt, disambig.txt ...
+--> data/lang/phones/word_boundary.txt doesn't include disambiguation symbols
+--> data/lang/phones/word_boundary.txt is the union of nonsilence.txt and silence.txt
+--> data/lang/phones/word_boundary.txt is OK
+
+Checking word-level disambiguation symbols...
+--> data/lang/phones/wdisambig.txt exists (newer prepare_lang.sh)
+Checking word_boundary.int and disambig.int
+--> generating a 45 word/subword sequence
+--> resulting phone sequence from L.fst corresponds to the word sequence
+--> L.fst is OK
+--> generating a 17 word/subword sequence
+--> resulting phone sequence from L_disambig.fst corresponds to the word sequence
+--> L_disambig.fst is OK
+
+Checking data/lang/oov.{txt, int} ...
+--> text seems to be UTF-8 or ASCII, checking whitespaces
+--> text contains only allowed whitespaces
+--> 1 entry/entries in data/lang/oov.txt
+--> data/lang/oov.int corresponds to data/lang/oov.txt
+--> data/lang/oov.{txt, int} are OK
+
+--> data/lang/L.fst is olabel sorted
+--> data/lang/L_disambig.fst is olabel sorted
+--> SUCCESS [validating lang directory data/lang]
+
+===== LANGUAGE MODEL CREATION =====
+===== MAKING lm.arpa =====
+
+
+===== MAKING G.fst =====
+
+
+===== MONO TRAINING =====
+
+steps/train_mono.sh --nj 4 --cmd run.pl data/train data/lang exp/mono
+steps/train_mono.sh: Initializing monophone system.
+steps/train_mono.sh: Compiling training graphs
+steps/train_mono.sh: Aligning data equally (pass 0)
+steps/train_mono.sh: Pass 1
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 2
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 3
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 4
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 5
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 6
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 7
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 8
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 9
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 10
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 11
+steps/train_mono.sh: Pass 12
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 13
+steps/train_mono.sh: Pass 14
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 15
+steps/train_mono.sh: Pass 16
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 17
+steps/train_mono.sh: Pass 18
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 19
+steps/train_mono.sh: Pass 20
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 21
+steps/train_mono.sh: Pass 22
+steps/train_mono.sh: Pass 23
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 24
+steps/train_mono.sh: Pass 25
+steps/train_mono.sh: Pass 26
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 27
+steps/train_mono.sh: Pass 28
+steps/train_mono.sh: Pass 29
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 30
+steps/train_mono.sh: Pass 31
+steps/train_mono.sh: Pass 32
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 33
+steps/train_mono.sh: Pass 34
+steps/train_mono.sh: Pass 35
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 36
+steps/train_mono.sh: Pass 37
+steps/train_mono.sh: Pass 38
+steps/train_mono.sh: Aligning data
+steps/train_mono.sh: Pass 39
+steps/diagnostic/analyze_alignments.sh --cmd run.pl data/lang exp/mono
+steps/diagnostic/analyze_alignments.sh: see stats in exp/mono/log/analyze_alignments.log
+21 warnings in exp/mono/log/acc.*.*.log
+769 warnings in exp/mono/log/align.*.*.log
+858 warnings in exp/mono/log/update.*.log
+exp/mono: nj=4 align prob=-99.22 over 1.47h [retry=0.5%, fail=0.0%] states=391 gauss=992
+steps/train_mono.sh: Done training monophone system in exp/mono
+
+===== MONO DECODING =====
+
+WARNING: the --mono, --left-biphone and --quinphone options are now deprecated and ignored.
+0.000200445 -1.69903e-05
+0.000200445 -1.69903e-05
+0.000450239 -0.000411119
+steps/decode.sh --config conf/decode.config --nj 4 --cmd run.pl exp/mono/graph data/test exp/mono/decode
+decode.sh: feature type is delta
+steps/diagnostic/analyze_lats.sh --cmd run.pl exp/mono/graph exp/mono/decode
+steps/diagnostic/analyze_lats.sh: see stats in exp/mono/decode/log/analyze_alignments.log
+Overall, lattice depth (10,50,90-percentile)=(8,63,330) and mean=140.2
+steps/diagnostic/analyze_lats.sh: see stats in exp/mono/decode/log/analyze_lattice_depth_stats.log
+exp/mono/decode/wer_10
+%WER 81.07 [ 5726 / 7063, 342 ins, 1140 del, 4244 sub ]
+%SER 97.33 [ 1494 / 1535 ]
+exp/mono/decode/wer_11
+%WER 80.62 [ 5694 / 7063, 266 ins, 1290 del, 4138 sub ]
+%SER 97.26 [ 1493 / 1535 ]
+exp/mono/decode/wer_12
+%WER 80.16 [ 5662 / 7063, 218 ins, 1442 del, 4002 sub ]
+%SER 97.13 [ 1491 / 1535 ]
+exp/mono/decode/wer_13
+%WER 80.09 [ 5657 / 7063, 175 ins, 1599 del, 3883 sub ]
+%SER 97.26 [ 1493 / 1535 ]
+exp/mono/decode/wer_14
+%WER 80.15 [ 5661 / 7063, 143 ins, 1736 del, 3782 sub ]
+%SER 97.20 [ 1492 / 1535 ]
+exp/mono/decode/wer_15
+%WER 80.55 [ 5689 / 7063, 124 ins, 1868 del, 3697 sub ]
+%SER 97.26 [ 1493 / 1535 ]
+exp/mono/decode/wer_16
+%WER 81.03 [ 5723 / 7063, 100 ins, 2007 del, 3616 sub ]
+%SER 97.33 [ 1494 / 1535 ]
+exp/mono/decode/wer_17
+%WER 81.71 [ 5771 / 7063, 81 ins, 2150 del, 3540 sub ]
+%SER 97.20 [ 1492 / 1535 ]
+exp/mono/decode/wer_7
+%WER 85.95 [ 6071 / 7063, 700 ins, 698 del, 4673 sub ]
+%SER 97.65 [ 1499 / 1535 ]
+exp/mono/decode/wer_8
+%WER 84.11 [ 5941 / 7063, 570 ins, 832 del, 4539 sub ]
+%SER 97.52 [ 1497 / 1535 ]
+exp/mono/decode/wer_9
+%WER 82.32 [ 5814 / 7063, 448 ins, 983 del, 4383 sub ]
+%SER 97.33 [ 1494 / 1535 ]
+exp/mono/decode//wer_10
+%WER 81.07 [ 5726 / 7063, 342 ins, 1140 del, 4244 sub ]
+%SER 97.33 [ 1494 / 1535 ]
+exp/mono/decode//wer_11
+%WER 80.62 [ 5694 / 7063, 266 ins, 1290 del, 4138 sub ]
+%SER 97.26 [ 1493 / 1535 ]
+exp/mono/decode//wer_12
+%WER 80.16 [ 5662 / 7063, 218 ins, 1442 del, 4002 sub ]
+%SER 97.13 [ 1491 / 1535 ]
+exp/mono/decode//wer_13
+%WER 80.09 [ 5657 / 7063, 175 ins, 1599 del, 3883 sub ]
+%SER 97.26 [ 1493 / 1535 ]
+exp/mono/decode//wer_14
+%WER 80.15 [ 5661 / 7063, 143 ins, 1736 del, 3782 sub ]
+%SER 97.20 [ 1492 / 1535 ]
+exp/mono/decode//wer_15
+%WER 80.55 [ 5689 / 7063, 124 ins, 1868 del, 3697 sub ]
+%SER 97.26 [ 1493 / 1535 ]
+exp/mono/decode//wer_16
+%WER 81.03 [ 5723 / 7063, 100 ins, 2007 del, 3616 sub ]
+%SER 97.33 [ 1494 / 1535 ]
+exp/mono/decode//wer_17
+%WER 81.71 [ 5771 / 7063, 81 ins, 2150 del, 3540 sub ]
+%SER 97.20 [ 1492 / 1535 ]
+exp/mono/decode//wer_7
+%WER 85.95 [ 6071 / 7063, 700 ins, 698 del, 4673 sub ]
+%SER 97.65 [ 1499 / 1535 ]
+exp/mono/decode//wer_8
+%WER 84.11 [ 5941 / 7063, 570 ins, 832 del, 4539 sub ]
+%SER 97.52 [ 1497 / 1535 ]
+exp/mono/decode//wer_9
+%WER 82.32 [ 5814 / 7063, 448 ins, 983 del, 4383 sub ]
+%SER 97.33 [ 1494 / 1535 ]
+
+===== MONO ALIGNMENT =====
+
+steps/align_si.sh --nj 4 --cmd run.pl data/train data/lang exp/mono exp/mono_ali
+steps/align_si.sh: feature type is delta
+steps/align_si.sh: aligning data in data/train using model from exp/mono, putting alignments in exp/mono_ali
+steps/diagnostic/analyze_alignments.sh --cmd run.pl data/lang exp/mono_ali
+steps/diagnostic/analyze_alignments.sh: see stats in exp/mono_ali/log/analyze_alignments.log
+steps/align_si.sh: done aligning data.
+
+===== TRI1 (first triphone pass) TRAINING =====
+
+steps/train_deltas.sh --cmd run.pl 2000 11000 data/train data/lang exp/mono_ali exp/tri1
+steps/train_deltas.sh: accumulating tree stats
+steps/train_deltas.sh: getting questions for tree-building, via clustering
+steps/train_deltas.sh: building the tree
+WARNING (gmm-init-model[5.5.432~1-07c9d]:InitAmGmm():gmm-init-model.cc:55) Tree has pdf-id 1 with no stats; corresponding phone list: 6 7 8 9 10 
+WARNING (gmm-init-model[5.5.432~1-07c9d]:InitAmGmm():gmm-init-model.cc:55) Tree has pdf-id 7 with no stats; corresponding phone list: 31 32 33 34 
+WARNING (gmm-init-model[5.5.432~1-07c9d]:InitAmGmm():gmm-init-model.cc:55) Tree has pdf-id 76 with no stats; corresponding phone list: 307 308 309 310 
+** The warnings above about 'no stats' generally mean you have phones **
+** (or groups of phones) in your phone set that had no corresponding data. **
+** You should probably figure out whether something went wrong, **
+** or whether your data just doesn't happen to have examples of those **
+** phones. **
+steps/train_deltas.sh: converting alignments from exp/mono_ali to use current tree
+steps/train_deltas.sh: compiling graphs of transcripts
+steps/train_deltas.sh: training pass 1
+steps/train_deltas.sh: training pass 2
+steps/train_deltas.sh: training pass 3
+steps/train_deltas.sh: training pass 4
+steps/train_deltas.sh: training pass 5
+steps/train_deltas.sh: training pass 6
+steps/train_deltas.sh: training pass 7
+steps/train_deltas.sh: training pass 8
+steps/train_deltas.sh: training pass 9
+steps/train_deltas.sh: training pass 10
+steps/train_deltas.sh: aligning data
+steps/train_deltas.sh: training pass 11
+steps/train_deltas.sh: training pass 12
+steps/train_deltas.sh: training pass 13
+steps/train_deltas.sh: training pass 14
+steps/train_deltas.sh: training pass 15
+steps/train_deltas.sh: training pass 16
+steps/train_deltas.sh: training pass 17
+steps/train_deltas.sh: training pass 18
+steps/train_deltas.sh: training pass 19
+steps/train_deltas.sh: training pass 20
+steps/train_deltas.sh: aligning data
+steps/train_deltas.sh: training pass 21
+steps/train_deltas.sh: training pass 22
+steps/train_deltas.sh: training pass 23
+steps/train_deltas.sh: training pass 24
+steps/train_deltas.sh: training pass 25
+steps/train_deltas.sh: training pass 26
+steps/train_deltas.sh: training pass 27
+steps/train_deltas.sh: training pass 28
+steps/train_deltas.sh: training pass 29
+steps/train_deltas.sh: training pass 30
+steps/train_deltas.sh: aligning data
+steps/train_deltas.sh: training pass 31
+steps/train_deltas.sh: training pass 32
+steps/train_deltas.sh: training pass 33
+steps/train_deltas.sh: training pass 34
+steps/diagnostic/analyze_alignments.sh --cmd run.pl data/lang exp/tri1
+steps/diagnostic/analyze_alignments.sh: see stats in exp/tri1/log/analyze_alignments.log
+16 warnings in exp/tri1/log/align.*.*.log
+3 warnings in exp/tri1/log/questions.log
+1 warnings in exp/tri1/log/build_tree.log
+363 warnings in exp/tri1/log/update.*.log
+219 warnings in exp/tri1/log/init_model.log
+exp/tri1: nj=4 align prob=-95.14 over 1.47h [retry=0.1%, fail=0.0%] states=960 gauss=11038 tree-impr=4.28
+steps/train_deltas.sh: Done training system with delta+delta-delta features in exp/tri1
+
+===== TRI1 (first triphone pass) DECODING =====
+
+0.000200445 -1.69903e-05
+0.000501791 -0.000473787
+steps/decode.sh --config conf/decode.config --nj 4 --cmd run.pl exp/tri1/graph data/test exp/tri1/decode
+decode.sh: feature type is delta
+steps/diagnostic/analyze_lats.sh --cmd run.pl exp/tri1/graph exp/tri1/decode
+steps/diagnostic/analyze_lats.sh: see stats in exp/tri1/decode/log/analyze_alignments.log
+Overall, lattice depth (10,50,90-percentile)=(4,25,112) and mean=48.7
+steps/diagnostic/analyze_lats.sh: see stats in exp/tri1/decode/log/analyze_lattice_depth_stats.log
+exp/tri1/decode/wer_10
+%WER 81.37 [ 5747 / 7063, 662 ins, 638 del, 4447 sub ]
+%SER 97.39 [ 1495 / 1535 ]
+exp/tri1/decode/wer_11
+%WER 79.75 [ 5633 / 7063, 549 ins, 758 del, 4326 sub ]
+%SER 97.26 [ 1493 / 1535 ]
+exp/tri1/decode/wer_12
+%WER 78.07 [ 5514 / 7063, 435 ins, 871 del, 4208 sub ]
+%SER 97.20 [ 1492 / 1535 ]
+exp/tri1/decode/wer_13
+%WER 77.02 [ 5440 / 7063, 361 ins, 968 del, 4111 sub ]
+%SER 96.87 [ 1487 / 1535 ]
+exp/tri1/decode/wer_14
+%WER 76.33 [ 5391 / 7063, 310 ins, 1081 del, 4000 sub ]
+%SER 96.81 [ 1486 / 1535 ]
+exp/tri1/decode/wer_15
+%WER 75.92 [ 5362 / 7063, 253 ins, 1200 del, 3909 sub ]
+%SER 96.61 [ 1483 / 1535 ]
+exp/tri1/decode/wer_16
+%WER 75.45 [ 5329 / 7063, 211 ins, 1308 del, 3810 sub ]
+%SER 96.42 [ 1480 / 1535 ]
+exp/tri1/decode/wer_17
+%WER 75.39 [ 5325 / 7063, 188 ins, 1409 del, 3728 sub ]
+%SER 96.61 [ 1483 / 1535 ]
+exp/tri1/decode/wer_7
+%WER 91.24 [ 6444 / 7063, 1299 ins, 384 del, 4761 sub ]
+%SER 98.11 [ 1506 / 1535 ]
+exp/tri1/decode/wer_8
+%WER 87.48 [ 6179 / 7063, 1065 ins, 465 del, 4649 sub ]
+%SER 97.65 [ 1499 / 1535 ]
+exp/tri1/decode/wer_9
+%WER 83.90 [ 5926 / 7063, 829 ins, 536 del, 4561 sub ]
+%SER 97.46 [ 1496 / 1535 ]
+exp/tri1/decode/wer_10
+%WER 81.37 [ 5747 / 7063, 662 ins, 638 del, 4447 sub ]
+%SER 97.39 [ 1495 / 1535 ]
+exp/tri1/decode/wer_11
+%WER 79.75 [ 5633 / 7063, 549 ins, 758 del, 4326 sub ]
+%SER 97.26 [ 1493 / 1535 ]
+exp/tri1/decode/wer_12
+%WER 78.07 [ 5514 / 7063, 435 ins, 871 del, 4208 sub ]
+%SER 97.20 [ 1492 / 1535 ]
+exp/tri1/decode/wer_13
+%WER 77.02 [ 5440 / 7063, 361 ins, 968 del, 4111 sub ]
+%SER 96.87 [ 1487 / 1535 ]
+exp/tri1/decode/wer_14
+%WER 76.33 [ 5391 / 7063, 310 ins, 1081 del, 4000 sub ]
+%SER 96.81 [ 1486 / 1535 ]
+exp/tri1/decode/wer_15
+%WER 75.92 [ 5362 / 7063, 253 ins, 1200 del, 3909 sub ]
+%SER 96.61 [ 1483 / 1535 ]
+exp/tri1/decode/wer_16
+%WER 75.45 [ 5329 / 7063, 211 ins, 1308 del, 3810 sub ]
+%SER 96.42 [ 1480 / 1535 ]
+exp/tri1/decode/wer_17
+%WER 75.39 [ 5325 / 7063, 188 ins, 1409 del, 3728 sub ]
+%SER 96.61 [ 1483 / 1535 ]
+exp/tri1/decode/wer_7
+%WER 91.24 [ 6444 / 7063, 1299 ins, 384 del, 4761 sub ]
+%SER 98.11 [ 1506 / 1535 ]
+exp/tri1/decode/wer_8
+%WER 87.48 [ 6179 / 7063, 1065 ins, 465 del, 4649 sub ]
+%SER 97.65 [ 1499 / 1535 ]
+exp/tri1/decode/wer_9
+%WER 83.90 [ 5926 / 7063, 829 ins, 536 del, 4561 sub ]
+%SER 97.46 [ 1496 / 1535 ]
+
+===== run.sh script is finished =====
+
