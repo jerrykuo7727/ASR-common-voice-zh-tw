@@ -7,7 +7,7 @@ export DATA_DIR=/home/jiazhi/Dataset/common-voice_zh-TW_43h_2019-06-12
 . ./cmd.sh || exit 1
 
 nj=4
-lm_order=1
+lm_order=4
 
 . utils/parse_options.sh || exit 1
 [[ $# -ge 1 ]] && { echo "Wrong arguments!"; exit 1; }
