@@ -50,7 +50,7 @@ def contains_no_eng(text):
             return False
     return True
 
-def zhuyin2phones(zhuyin, use_tone=True):
+def zhuyin2phones(zhuyin, use_tone):
     ''' Convert zhuyin of a charcter to phonemes. '''
     if zhuyin[0] == u'\u02d9':  # Neutral(fifth) tone 
         phones = ' '.join([c for c in zhuyin][1:])
@@ -62,19 +62,29 @@ def zhuyin2phones(zhuyin, use_tone=True):
         phones = f'{phones}{tone}'
     return phones
 
-def fix_phones(phones):
+def fix_phones(phones, use_tone):
     ''' Fix broken phonemes. '''
     phones = phones.replace('一', 'ㄧ')
-    phones = phones.replace('勳', 'ㄒ ㄩ ㄣ-')
-    phones = phones.replace('艷', 'ㄧ ㄢˋ')
-    phones = phones.replace('曬', 'ㄕ ㄞˋ')
+    if use_tone:
+        phones = phones.replace('勳', 'ㄒ ㄩ ㄣ-')
+        phones = phones.replace('艷', 'ㄧ ㄢˋ')
+        phones = phones.replace('曬', 'ㄕ ㄞˋ')
+    else:
+        phones = phones.replace('勳', 'ㄒ ㄩ ㄣ')
+        phones = phones.replace('艷', 'ㄧ ㄢ')
+        phones = phones.replace('曬', 'ㄕ ㄞ')
     return phones
 
-def word2phones(word):
+def word2phones(word, use_tone=False):
     ''' Convert a chinese word to zhuyin phonemes. '''
+    if word == '曬':  # special case
+        if use_tone:
+            return 'ㄕ ㄞˋ'
+        else:
+            return 'ㄕ ㄞ'
     zhuyins = trans_sentense(word).split()
-    phones = ' '.join([zhuyin2phones(z) for z in zhuyins])
-    phones = fix_phones(phones)
+    phones = ' '.join([zhuyin2phones(z, use_tone) for z in zhuyins])
+    phones = fix_phones(phones, use_tone)
     return phones
 
 
