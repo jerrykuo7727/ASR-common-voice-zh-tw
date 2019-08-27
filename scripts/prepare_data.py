@@ -50,13 +50,15 @@ def contains_no_eng(text):
             return False
     return True
 
-def zhuyin2phones(zhuyin, use_tone):
+def zhuyin2phones(zhuyin, use_tone, sep):
     ''' Convert zhuyin of a charcter to phonemes. '''
+    if any(is_chinese(c) for c in zhuyin):
+        return zhuyin
     if zhuyin[0] == u'\u02d9':  # Neutral(fifth) tone 
-        phones = ' '.join([c for c in zhuyin][1:])
+        phones = sep.join([c for c in zhuyin][1:])
         tone = zhuyin[0]
     else:
-        phones = ' '.join([c for c in zhuyin][:-1])
+        phones = sep.join([c for c in zhuyin][:-1])
         tone = zhuyin[-1]
     if use_tone:
         phones = f'{phones}{tone}'
@@ -75,7 +77,7 @@ def fix_phones(phones, use_tone):
         phones = phones.replace('曬', 'ㄕ ㄞ')
     return phones
 
-def word2phones(word, use_tone=False):
+def word2phones(word, use_tone, sep=' '):
     ''' Convert a chinese word to zhuyin phonemes. '''
     if word == '曬':  # special case
         if use_tone:
@@ -83,28 +85,44 @@ def word2phones(word, use_tone=False):
         else:
             return 'ㄕ ㄞ'
     zhuyins = trans_sentense(word).split()
-    phones = ' '.join([zhuyin2phones(z, use_tone) for z in zhuyins])
+    phones = ' '.join([zhuyin2phones(z, use_tone, sep) for z in zhuyins])
     phones = fix_phones(phones, use_tone)
     return phones
 
+def sent2phones(cut_sent, use_tone):
+    ''' Convert a segmented sentence into phonemes. '''
+    cut_phones, pos = [], 0
+    sent = ''.join(cut_sent)
+    phones = word2phones(sent, use_tone, sep='').split()
+    for word in cut_sent:
+        word_len = len(word)
+        word_phones = ' '.join(phones[pos:pos + word_len])
+        cut_phones.append(word_phones)
+        pos += word_len
+    return cut_phones
+
 
 if __name__ == '__main__':
+
+    # Configuration
+    use_tone = False
     jieba.set_dictionary('scripts/dict.txt.big')
     jieba.initialize()
 
-    # Read and merge information of train/test set
+    # Read information of train/test set
     train_tsv = join(DATA_DIR, 'train.tsv')
     test_tsv = join(DATA_DIR, 'test.tsv')
     train_df = pd.read_csv(train_tsv, sep='\t')
     test_df = pd.read_csv(test_tsv, sep='\t')
 
-    # Exclude audios with english
+    # Merge data excluding text with english characters
     train_df = train_df[train_df.sentence.apply(contains_no_eng)]
     test_df = test_df[test_df.sentence.apply(contains_no_eng)]
     full_df = pd.concat([train_df, test_df])
 
 
-    ''' Acoustic Model '''
+    ''' Prepare AM data '''
+    print('Preparing AM data...\r', end='')
 
     # Prepare spk_id, gender and utt_id for all audios
     client_spk = full_df[['client_id']].drop_duplicates()
@@ -129,6 +147,9 @@ if __name__ == '__main__':
     # Sort train/test set by utt_id for kaldi-mfcc
     train_df = train_df.sort_values(by='utt_id')
     test_df = test_df.sort_values(by='utt_id')
+
+
+    ''' Write AM data '''
 
     # Write acoustic data of train/test set
     for split, df in zip(['train', 'test'], [train_df, test_df]):
@@ -157,33 +178,61 @@ if __name__ == '__main__':
             for _, row in df.iterrows():
                 f.write(f'{row.utt_id} {row.spk_id}\n')
 
+    print('Preparing AM data... DONE')
 
-    ''' Language Model '''
+
+    ''' Prepare LM data '''
+    print('Preparing LM data...\r', end='')
+
+    # Build corpus to train language model
+    corpus = full_df.sentence.apply(' '.join).tolist()
+
+    # Build lexicon with zhuyin package
+    sents = full_df.sentence.tolist()
+    sents_phones = [sent2phones(sent, use_tone) for sent in sents]
+    lexicon = set()
+    for sent, sent_phones in zip(sents, sents_phones):
+        lexicon.update(zip(sent, sent_phones))
+        
+    # Build phone set from lexicon
+    phone_set = set()
+    for _, zhuyins in lexicon:
+        for zhuyin in zhuyins.split():
+            if use_tone:
+                phones = [c for c in zhuyin[:-2]]
+                phones.append(zhuyin[-2:])
+                phone_set.update(phones)
+            else:
+                phones = [c for c in zhuyin]
+                phone_set.update(phones)
+
+    
+    ''' Write LM data '''
 
     # corpus.txt
-    corpus = full_df.sentence.apply(' '.join).tolist()
     with open('data/local/corpus.txt', 'w', encoding='UTF-8') as f:
         for sent in corpus:
             f.write(f'{sent}\n')
-
+            
     # lexicon.txt
-    phone_set = []
     with open('data/local/dict/lexicon.txt', 'w', encoding='UTF-8') as f:
         f.write('!SIL sil\n')
         f.write('<UNK> spn\n')
-        for word in set(w for s in full_df.sentence.tolist() for w in s):
-            phones = word2phones(word)
-            phone_set += phones.split()
+        for word, phones in lexicon:
             f.write(f'{word} {phones}\n')
-
-    # phone files
-    phone_set = set(phone_set)
+            
+    # nonsilence_phones.txt
     with open('data/local/dict/nonsilence_phones.txt', 'w', encoding='UTF-8') as f:
         for phone in phone_set:
             f.write(f'{phone}\n')
-            
+
+    # silence_phones.txt
     with open('data/local/dict/silence_phones.txt', 'w', encoding='UTF-8') as f:
-        f.write('sil\nspn\n')
+        f.write('sil\nspn')
         
+    # optional_silence.txt
     with open('data/local/dict/optional_silence.txt', 'w', encoding='UTF-8') as f:
-        f.write('sil\n')
+        f.write('sil')
+
+    print('Preparing LM data... DONE')
+    print('Program `prepare_data.py` ends succesfully.')
