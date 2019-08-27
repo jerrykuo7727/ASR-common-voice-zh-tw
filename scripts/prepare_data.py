@@ -192,19 +192,24 @@ if __name__ == '__main__':
     sents_phones = [sent2phones(sent, use_tone) for sent in sents]
     lexicon = set()
     for sent, sent_phones in zip(sents, sents_phones):
+        for i, zhuyins in enumerate(sent_phones):
+            phonemes = []
+            for zhuyin in zhuyins.split():
+                if use_tone:
+                    phones = [c for c in zhuyin[:-2]]
+                    phones.append(zhuyin[-2:])
+                else:
+                    phones = [c for c in zhuyin]
+                phones = ' '.join(phones)
+                phonemes.append(phones)
+            phonemes = ' '.join(phonemes)
+            sent_phones[i] = phonemes
         lexicon.update(zip(sent, sent_phones))
         
     # Build phone set from lexicon
     phone_set = set()
-    for _, zhuyins in lexicon:
-        for zhuyin in zhuyins.split():
-            if use_tone:
-                phones = [c for c in zhuyin[:-2]]
-                phones.append(zhuyin[-2:])
-                phone_set.update(phones)
-            else:
-                phones = [c for c in zhuyin]
-                phone_set.update(phones)
+    for _, phones in lexicon:
+        phone_set.update(phones.split())
 
     
     ''' Write LM data '''
@@ -228,11 +233,11 @@ if __name__ == '__main__':
 
     # silence_phones.txt
     with open('data/local/dict/silence_phones.txt', 'w', encoding='UTF-8') as f:
-        f.write('sil\nspn')
+        f.write('sil\nspn\n')
         
     # optional_silence.txt
     with open('data/local/dict/optional_silence.txt', 'w', encoding='UTF-8') as f:
-        f.write('sil')
+        f.write('sil\n')
 
     print('Preparing LM data... DONE')
     print('Program `prepare_data.py` ends succesfully.')
