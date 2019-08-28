@@ -1,6 +1,9 @@
 
 ===== PREPARING REQUIRED DATA =====
 
+Preparing AM data...Preparing AM data... DONE
+Preparing LM data...Preparing LM data... DONE
+Program `prepare_data.py` ends succesfully.
 
 ===== PREPARING ACOUSTIC DATA =====
 
@@ -89,7 +92,7 @@ Checking data/lang/phones/context_indep.{txt, int, csl} ...
 Checking data/lang/phones/nonsilence.{txt, int, csl} ...
 --> text seems to be UTF-8 or ASCII, checking whitespaces
 --> text contains only allowed whitespaces
---> 508 entry/entries in data/lang/phones/nonsilence.txt
+--> 148 entry/entries in data/lang/phones/nonsilence.txt
 --> data/lang/phones/nonsilence.int corresponds to data/lang/phones/nonsilence.txt
 --> data/lang/phones/nonsilence.csl corresponds to data/lang/phones/nonsilence.txt
 --> data/lang/phones/nonsilence.{txt, int, csl} are OK
@@ -113,7 +116,7 @@ Checking data/lang/phones/optional_silence.{txt, int, csl} ...
 Checking data/lang/phones/disambig.{txt, int, csl} ...
 --> text seems to be UTF-8 or ASCII, checking whitespaces
 --> text contains only allowed whitespaces
---> 7 entry/entries in data/lang/phones/disambig.txt
+--> 13 entry/entries in data/lang/phones/disambig.txt
 --> data/lang/phones/disambig.int corresponds to data/lang/phones/disambig.txt
 --> data/lang/phones/disambig.csl corresponds to data/lang/phones/disambig.txt
 --> data/lang/phones/disambig.{txt, int, csl} are OK
@@ -121,14 +124,14 @@ Checking data/lang/phones/disambig.{txt, int, csl} ...
 Checking data/lang/phones/roots.{txt, int} ...
 --> text seems to be UTF-8 or ASCII, checking whitespaces
 --> text contains only allowed whitespaces
---> 129 entry/entries in data/lang/phones/roots.txt
+--> 39 entry/entries in data/lang/phones/roots.txt
 --> data/lang/phones/roots.int corresponds to data/lang/phones/roots.txt
 --> data/lang/phones/roots.{txt, int} are OK
 
 Checking data/lang/phones/sets.{txt, int} ...
 --> text seems to be UTF-8 or ASCII, checking whitespaces
 --> text contains only allowed whitespaces
---> 129 entry/entries in data/lang/phones/sets.txt
+--> 39 entry/entries in data/lang/phones/sets.txt
 --> data/lang/phones/sets.int corresponds to data/lang/phones/sets.txt
 --> data/lang/phones/sets.{txt, int} are OK
 
@@ -142,7 +145,7 @@ Checking data/lang/phones/extra_questions.{txt, int} ...
 Checking data/lang/phones/word_boundary.{txt, int} ...
 --> text seems to be UTF-8 or ASCII, checking whitespaces
 --> text contains only allowed whitespaces
---> 518 entry/entries in data/lang/phones/word_boundary.txt
+--> 158 entry/entries in data/lang/phones/word_boundary.txt
 --> data/lang/phones/word_boundary.int corresponds to data/lang/phones/word_boundary.txt
 --> data/lang/phones/word_boundary.{txt, int} are OK
 
@@ -164,10 +167,10 @@ Checking word_boundary.txt: silence.txt, nonsilence.txt, disambig.txt ...
 Checking word-level disambiguation symbols...
 --> data/lang/phones/wdisambig.txt exists (newer prepare_lang.sh)
 Checking word_boundary.int and disambig.int
---> generating a 45 word/subword sequence
+--> generating a 82 word/subword sequence
 --> resulting phone sequence from L.fst corresponds to the word sequence
 --> L.fst is OK
---> generating a 17 word/subword sequence
+--> generating a 100 word/subword sequence
 --> resulting phone sequence from L_disambig.fst corresponds to the word sequence
 --> L_disambig.fst is OK
 
@@ -257,90 +260,93 @@ steps/train_mono.sh: Aligning data
 steps/train_mono.sh: Pass 39
 steps/diagnostic/analyze_alignments.sh --cmd run.pl data/lang exp/mono
 steps/diagnostic/analyze_alignments.sh: see stats in exp/mono/log/analyze_alignments.log
-21 warnings in exp/mono/log/acc.*.*.log
-769 warnings in exp/mono/log/align.*.*.log
-858 warnings in exp/mono/log/update.*.log
-exp/mono: nj=4 align prob=-99.22 over 1.47h [retry=0.5%, fail=0.0%] states=391 gauss=992
+36 warnings in exp/mono/log/acc.*.*.log
+200 warnings in exp/mono/log/update.*.log
+662 warnings in exp/mono/log/align.*.*.log
+exp/mono: nj=4 align prob=-94.32 over 1.47h [retry=0.2%, fail=0.1%] states=121 gauss=993
 steps/train_mono.sh: Done training monophone system in exp/mono
 
 ===== MONO DECODING =====
 
 WARNING: the --mono, --left-biphone and --quinphone options are now deprecated and ignored.
-0.000200445 -1.69903e-05
-0.000200445 -1.69903e-05
-0.000450239 -0.000411119
+-0.0312146 -0.0321367
+[info]: LG not stochastic.
+-0.0312146 -0.0321367
+[info]: CLG not stochastic.
+0.00019061 -0.0618943
+HCLGa is not stochastic
 steps/decode.sh --config conf/decode.config --nj 4 --cmd run.pl exp/mono/graph data/test exp/mono/decode
 decode.sh: feature type is delta
 steps/diagnostic/analyze_lats.sh --cmd run.pl exp/mono/graph exp/mono/decode
 steps/diagnostic/analyze_lats.sh: see stats in exp/mono/decode/log/analyze_alignments.log
-Overall, lattice depth (10,50,90-percentile)=(8,63,330) and mean=140.2
+Overall, lattice depth (10,50,90-percentile)=(1,6,132) and mean=48.8
 steps/diagnostic/analyze_lats.sh: see stats in exp/mono/decode/log/analyze_lattice_depth_stats.log
 exp/mono/decode/wer_10
-%WER 81.07 [ 5726 / 7063, 342 ins, 1140 del, 4244 sub ]
-%SER 97.33 [ 1494 / 1535 ]
+%WER 31.69 [ 2238 / 7063, 307 ins, 453 del, 1478 sub ]
+%SER 52.18 [ 801 / 1535 ]
 exp/mono/decode/wer_11
-%WER 80.62 [ 5694 / 7063, 266 ins, 1290 del, 4138 sub ]
-%SER 97.26 [ 1493 / 1535 ]
+%WER 29.97 [ 2117 / 7063, 247 ins, 471 del, 1399 sub ]
+%SER 49.25 [ 756 / 1535 ]
 exp/mono/decode/wer_12
-%WER 80.16 [ 5662 / 7063, 218 ins, 1442 del, 4002 sub ]
-%SER 97.13 [ 1491 / 1535 ]
+%WER 28.84 [ 2037 / 7063, 221 ins, 507 del, 1309 sub ]
+%SER 47.23 [ 725 / 1535 ]
 exp/mono/decode/wer_13
-%WER 80.09 [ 5657 / 7063, 175 ins, 1599 del, 3883 sub ]
-%SER 97.26 [ 1493 / 1535 ]
+%WER 27.71 [ 1957 / 7063, 191 ins, 527 del, 1239 sub ]
+%SER 45.47 [ 698 / 1535 ]
 exp/mono/decode/wer_14
-%WER 80.15 [ 5661 / 7063, 143 ins, 1736 del, 3782 sub ]
-%SER 97.20 [ 1492 / 1535 ]
+%WER 27.47 [ 1940 / 7063, 176 ins, 546 del, 1218 sub ]
+%SER 44.63 [ 685 / 1535 ]
 exp/mono/decode/wer_15
-%WER 80.55 [ 5689 / 7063, 124 ins, 1868 del, 3697 sub ]
-%SER 97.26 [ 1493 / 1535 ]
+%WER 27.18 [ 1920 / 7063, 159 ins, 580 del, 1181 sub ]
+%SER 43.78 [ 672 / 1535 ]
 exp/mono/decode/wer_16
-%WER 81.03 [ 5723 / 7063, 100 ins, 2007 del, 3616 sub ]
-%SER 97.33 [ 1494 / 1535 ]
+%WER 27.33 [ 1930 / 7063, 143 ins, 628 del, 1159 sub ]
+%SER 43.39 [ 666 / 1535 ]
 exp/mono/decode/wer_17
-%WER 81.71 [ 5771 / 7063, 81 ins, 2150 del, 3540 sub ]
-%SER 97.20 [ 1492 / 1535 ]
+%WER 27.38 [ 1934 / 7063, 130 ins, 661 del, 1143 sub ]
+%SER 42.87 [ 658 / 1535 ]
 exp/mono/decode/wer_7
-%WER 85.95 [ 6071 / 7063, 700 ins, 698 del, 4673 sub ]
-%SER 97.65 [ 1499 / 1535 ]
+%WER 38.96 [ 2752 / 7063, 524 ins, 364 del, 1864 sub ]
+%SER 63.06 [ 968 / 1535 ]
 exp/mono/decode/wer_8
-%WER 84.11 [ 5941 / 7063, 570 ins, 832 del, 4539 sub ]
-%SER 97.52 [ 1497 / 1535 ]
+%WER 35.78 [ 2527 / 7063, 435 ins, 382 del, 1710 sub ]
+%SER 58.31 [ 895 / 1535 ]
 exp/mono/decode/wer_9
-%WER 82.32 [ 5814 / 7063, 448 ins, 983 del, 4383 sub ]
-%SER 97.33 [ 1494 / 1535 ]
+%WER 33.41 [ 2360 / 7063, 368 ins, 404 del, 1588 sub ]
+%SER 54.59 [ 838 / 1535 ]
 exp/mono/decode//wer_10
-%WER 81.07 [ 5726 / 7063, 342 ins, 1140 del, 4244 sub ]
-%SER 97.33 [ 1494 / 1535 ]
+%WER 31.69 [ 2238 / 7063, 307 ins, 453 del, 1478 sub ]
+%SER 52.18 [ 801 / 1535 ]
 exp/mono/decode//wer_11
-%WER 80.62 [ 5694 / 7063, 266 ins, 1290 del, 4138 sub ]
-%SER 97.26 [ 1493 / 1535 ]
+%WER 29.97 [ 2117 / 7063, 247 ins, 471 del, 1399 sub ]
+%SER 49.25 [ 756 / 1535 ]
 exp/mono/decode//wer_12
-%WER 80.16 [ 5662 / 7063, 218 ins, 1442 del, 4002 sub ]
-%SER 97.13 [ 1491 / 1535 ]
+%WER 28.84 [ 2037 / 7063, 221 ins, 507 del, 1309 sub ]
+%SER 47.23 [ 725 / 1535 ]
 exp/mono/decode//wer_13
-%WER 80.09 [ 5657 / 7063, 175 ins, 1599 del, 3883 sub ]
-%SER 97.26 [ 1493 / 1535 ]
+%WER 27.71 [ 1957 / 7063, 191 ins, 527 del, 1239 sub ]
+%SER 45.47 [ 698 / 1535 ]
 exp/mono/decode//wer_14
-%WER 80.15 [ 5661 / 7063, 143 ins, 1736 del, 3782 sub ]
-%SER 97.20 [ 1492 / 1535 ]
+%WER 27.47 [ 1940 / 7063, 176 ins, 546 del, 1218 sub ]
+%SER 44.63 [ 685 / 1535 ]
 exp/mono/decode//wer_15
-%WER 80.55 [ 5689 / 7063, 124 ins, 1868 del, 3697 sub ]
-%SER 97.26 [ 1493 / 1535 ]
+%WER 27.18 [ 1920 / 7063, 159 ins, 580 del, 1181 sub ]
+%SER 43.78 [ 672 / 1535 ]
 exp/mono/decode//wer_16
-%WER 81.03 [ 5723 / 7063, 100 ins, 2007 del, 3616 sub ]
-%SER 97.33 [ 1494 / 1535 ]
+%WER 27.33 [ 1930 / 7063, 143 ins, 628 del, 1159 sub ]
+%SER 43.39 [ 666 / 1535 ]
 exp/mono/decode//wer_17
-%WER 81.71 [ 5771 / 7063, 81 ins, 2150 del, 3540 sub ]
-%SER 97.20 [ 1492 / 1535 ]
+%WER 27.38 [ 1934 / 7063, 130 ins, 661 del, 1143 sub ]
+%SER 42.87 [ 658 / 1535 ]
 exp/mono/decode//wer_7
-%WER 85.95 [ 6071 / 7063, 700 ins, 698 del, 4673 sub ]
-%SER 97.65 [ 1499 / 1535 ]
+%WER 38.96 [ 2752 / 7063, 524 ins, 364 del, 1864 sub ]
+%SER 63.06 [ 968 / 1535 ]
 exp/mono/decode//wer_8
-%WER 84.11 [ 5941 / 7063, 570 ins, 832 del, 4539 sub ]
-%SER 97.52 [ 1497 / 1535 ]
+%WER 35.78 [ 2527 / 7063, 435 ins, 382 del, 1710 sub ]
+%SER 58.31 [ 895 / 1535 ]
 exp/mono/decode//wer_9
-%WER 82.32 [ 5814 / 7063, 448 ins, 983 del, 4383 sub ]
-%SER 97.33 [ 1494 / 1535 ]
+%WER 33.41 [ 2360 / 7063, 368 ins, 404 del, 1588 sub ]
+%SER 54.59 [ 838 / 1535 ]
 
 ===== MONO ALIGNMENT =====
 
@@ -358,8 +364,6 @@ steps/train_deltas.sh: accumulating tree stats
 steps/train_deltas.sh: getting questions for tree-building, via clustering
 steps/train_deltas.sh: building the tree
 WARNING (gmm-init-model[5.5.432~1-07c9d]:InitAmGmm():gmm-init-model.cc:55) Tree has pdf-id 1 with no stats; corresponding phone list: 6 7 8 9 10 
-WARNING (gmm-init-model[5.5.432~1-07c9d]:InitAmGmm():gmm-init-model.cc:55) Tree has pdf-id 7 with no stats; corresponding phone list: 31 32 33 34 
-WARNING (gmm-init-model[5.5.432~1-07c9d]:InitAmGmm():gmm-init-model.cc:55) Tree has pdf-id 76 with no stats; corresponding phone list: 307 308 309 310 
 ** The warnings above about 'no stats' generally mean you have phones **
 ** (or groups of phones) in your phone set that had no corresponding data. **
 ** You should probably figure out whether something went wrong, **
@@ -406,90 +410,93 @@ steps/train_deltas.sh: training pass 33
 steps/train_deltas.sh: training pass 34
 steps/diagnostic/analyze_alignments.sh --cmd run.pl data/lang exp/tri1
 steps/diagnostic/analyze_alignments.sh: see stats in exp/tri1/log/analyze_alignments.log
-16 warnings in exp/tri1/log/align.*.*.log
-3 warnings in exp/tri1/log/questions.log
 1 warnings in exp/tri1/log/build_tree.log
-363 warnings in exp/tri1/log/update.*.log
-219 warnings in exp/tri1/log/init_model.log
-exp/tri1: nj=4 align prob=-95.14 over 1.47h [retry=0.1%, fail=0.0%] states=960 gauss=11038 tree-impr=4.28
+117 warnings in exp/tri1/log/update.*.log
+1 warnings in exp/tri1/log/questions.log
+84 warnings in exp/tri1/log/init_model.log
+10 warnings in exp/tri1/log/acc.*.*.log
+15 warnings in exp/tri1/log/align.*.*.log
+exp/tri1: nj=4 align prob=-90.76 over 1.47h [retry=0.0%, fail=0.0%] states=648 gauss=11027 tree-impr=3.89
 steps/train_deltas.sh: Done training system with delta+delta-delta features in exp/tri1
 
 ===== TRI1 (first triphone pass) DECODING =====
 
-0.000200445 -1.69903e-05
-0.000501791 -0.000473787
+0 -0.0321367
+[info]: CLG not stochastic.
+0.573664 -0.0924099
+HCLGa is not stochastic
 steps/decode.sh --config conf/decode.config --nj 4 --cmd run.pl exp/tri1/graph data/test exp/tri1/decode
 decode.sh: feature type is delta
 steps/diagnostic/analyze_lats.sh --cmd run.pl exp/tri1/graph exp/tri1/decode
 steps/diagnostic/analyze_lats.sh: see stats in exp/tri1/decode/log/analyze_alignments.log
-Overall, lattice depth (10,50,90-percentile)=(4,25,112) and mean=48.7
+Overall, lattice depth (10,50,90-percentile)=(1,5,64) and mean=24.9
 steps/diagnostic/analyze_lats.sh: see stats in exp/tri1/decode/log/analyze_lattice_depth_stats.log
 exp/tri1/decode/wer_10
-%WER 81.37 [ 5747 / 7063, 662 ins, 638 del, 4447 sub ]
-%SER 97.39 [ 1495 / 1535 ]
+%WER 40.79 [ 2881 / 7063, 478 ins, 394 del, 2009 sub ]
+%SER 62.93 [ 966 / 1535 ]
 exp/tri1/decode/wer_11
-%WER 79.75 [ 5633 / 7063, 549 ins, 758 del, 4326 sub ]
-%SER 97.26 [ 1493 / 1535 ]
+%WER 37.49 [ 2648 / 7063, 384 ins, 434 del, 1830 sub ]
+%SER 59.35 [ 911 / 1535 ]
 exp/tri1/decode/wer_12
-%WER 78.07 [ 5514 / 7063, 435 ins, 871 del, 4208 sub ]
-%SER 97.20 [ 1492 / 1535 ]
+%WER 34.79 [ 2457 / 7063, 325 ins, 473 del, 1659 sub ]
+%SER 56.22 [ 863 / 1535 ]
 exp/tri1/decode/wer_13
-%WER 77.02 [ 5440 / 7063, 361 ins, 968 del, 4111 sub ]
-%SER 96.87 [ 1487 / 1535 ]
+%WER 33.16 [ 2342 / 7063, 287 ins, 508 del, 1547 sub ]
+%SER 53.81 [ 826 / 1535 ]
 exp/tri1/decode/wer_14
-%WER 76.33 [ 5391 / 7063, 310 ins, 1081 del, 4000 sub ]
-%SER 96.81 [ 1486 / 1535 ]
+%WER 31.59 [ 2231 / 7063, 239 ins, 543 del, 1449 sub ]
+%SER 52.12 [ 800 / 1535 ]
 exp/tri1/decode/wer_15
-%WER 75.92 [ 5362 / 7063, 253 ins, 1200 del, 3909 sub ]
-%SER 96.61 [ 1483 / 1535 ]
+%WER 30.54 [ 2157 / 7063, 210 ins, 573 del, 1374 sub ]
+%SER 50.62 [ 777 / 1535 ]
 exp/tri1/decode/wer_16
-%WER 75.45 [ 5329 / 7063, 211 ins, 1308 del, 3810 sub ]
-%SER 96.42 [ 1480 / 1535 ]
+%WER 29.52 [ 2085 / 7063, 190 ins, 588 del, 1307 sub ]
+%SER 49.12 [ 754 / 1535 ]
 exp/tri1/decode/wer_17
-%WER 75.39 [ 5325 / 7063, 188 ins, 1409 del, 3728 sub ]
-%SER 96.61 [ 1483 / 1535 ]
+%WER 28.97 [ 2046 / 7063, 169 ins, 602 del, 1275 sub ]
+%SER 48.27 [ 741 / 1535 ]
 exp/tri1/decode/wer_7
-%WER 91.24 [ 6444 / 7063, 1299 ins, 384 del, 4761 sub ]
-%SER 98.11 [ 1506 / 1535 ]
+%WER 52.87 [ 3734 / 7063, 857 ins, 283 del, 2594 sub ]
+%SER 74.14 [ 1138 / 1535 ]
 exp/tri1/decode/wer_8
-%WER 87.48 [ 6179 / 7063, 1065 ins, 465 del, 4649 sub ]
-%SER 97.65 [ 1499 / 1535 ]
+%WER 49.33 [ 3484 / 7063, 725 ins, 322 del, 2437 sub ]
+%SER 71.01 [ 1090 / 1535 ]
 exp/tri1/decode/wer_9
-%WER 83.90 [ 5926 / 7063, 829 ins, 536 del, 4561 sub ]
-%SER 97.46 [ 1496 / 1535 ]
+%WER 44.51 [ 3144 / 7063, 584 ins, 361 del, 2199 sub ]
+%SER 66.71 [ 1024 / 1535 ]
 exp/tri1/decode/wer_10
-%WER 81.37 [ 5747 / 7063, 662 ins, 638 del, 4447 sub ]
-%SER 97.39 [ 1495 / 1535 ]
+%WER 40.79 [ 2881 / 7063, 478 ins, 394 del, 2009 sub ]
+%SER 62.93 [ 966 / 1535 ]
 exp/tri1/decode/wer_11
-%WER 79.75 [ 5633 / 7063, 549 ins, 758 del, 4326 sub ]
-%SER 97.26 [ 1493 / 1535 ]
+%WER 37.49 [ 2648 / 7063, 384 ins, 434 del, 1830 sub ]
+%SER 59.35 [ 911 / 1535 ]
 exp/tri1/decode/wer_12
-%WER 78.07 [ 5514 / 7063, 435 ins, 871 del, 4208 sub ]
-%SER 97.20 [ 1492 / 1535 ]
+%WER 34.79 [ 2457 / 7063, 325 ins, 473 del, 1659 sub ]
+%SER 56.22 [ 863 / 1535 ]
 exp/tri1/decode/wer_13
-%WER 77.02 [ 5440 / 7063, 361 ins, 968 del, 4111 sub ]
-%SER 96.87 [ 1487 / 1535 ]
+%WER 33.16 [ 2342 / 7063, 287 ins, 508 del, 1547 sub ]
+%SER 53.81 [ 826 / 1535 ]
 exp/tri1/decode/wer_14
-%WER 76.33 [ 5391 / 7063, 310 ins, 1081 del, 4000 sub ]
-%SER 96.81 [ 1486 / 1535 ]
+%WER 31.59 [ 2231 / 7063, 239 ins, 543 del, 1449 sub ]
+%SER 52.12 [ 800 / 1535 ]
 exp/tri1/decode/wer_15
-%WER 75.92 [ 5362 / 7063, 253 ins, 1200 del, 3909 sub ]
-%SER 96.61 [ 1483 / 1535 ]
+%WER 30.54 [ 2157 / 7063, 210 ins, 573 del, 1374 sub ]
+%SER 50.62 [ 777 / 1535 ]
 exp/tri1/decode/wer_16
-%WER 75.45 [ 5329 / 7063, 211 ins, 1308 del, 3810 sub ]
-%SER 96.42 [ 1480 / 1535 ]
+%WER 29.52 [ 2085 / 7063, 190 ins, 588 del, 1307 sub ]
+%SER 49.12 [ 754 / 1535 ]
 exp/tri1/decode/wer_17
-%WER 75.39 [ 5325 / 7063, 188 ins, 1409 del, 3728 sub ]
-%SER 96.61 [ 1483 / 1535 ]
+%WER 28.97 [ 2046 / 7063, 169 ins, 602 del, 1275 sub ]
+%SER 48.27 [ 741 / 1535 ]
 exp/tri1/decode/wer_7
-%WER 91.24 [ 6444 / 7063, 1299 ins, 384 del, 4761 sub ]
-%SER 98.11 [ 1506 / 1535 ]
+%WER 52.87 [ 3734 / 7063, 857 ins, 283 del, 2594 sub ]
+%SER 74.14 [ 1138 / 1535 ]
 exp/tri1/decode/wer_8
-%WER 87.48 [ 6179 / 7063, 1065 ins, 465 del, 4649 sub ]
-%SER 97.65 [ 1499 / 1535 ]
+%WER 49.33 [ 3484 / 7063, 725 ins, 322 del, 2437 sub ]
+%SER 71.01 [ 1090 / 1535 ]
 exp/tri1/decode/wer_9
-%WER 83.90 [ 5926 / 7063, 829 ins, 536 del, 4561 sub ]
-%SER 97.46 [ 1496 / 1535 ]
+%WER 44.51 [ 3144 / 7063, 584 ins, 361 del, 2199 sub ]
+%SER 66.71 [ 1024 / 1535 ]
 
 ===== run.sh script is finished =====
 
