@@ -1,9 +1,11 @@
 import os
 from os.path import join
+import numpy as np
 import pandas as pd
 import jieba
 from bopomofo.main import trans_sentense
 
+np.random.seed(42)
 DATA_DIR = os.environ['DATA_DIR']
 
 def kaldi_gender(gender):
@@ -109,16 +111,12 @@ if __name__ == '__main__':
     jieba.set_dictionary('scripts/dict.txt.big')
     jieba.initialize()
 
-    # Read information of train/test set
-    train_tsv = join(DATA_DIR, 'train.tsv')
-    test_tsv = join(DATA_DIR, 'test.tsv')
-    train_df = pd.read_csv(train_tsv, sep='\t')
-    test_df = pd.read_csv(test_tsv, sep='\t')
+    # Read information of validated audios
+    full_tsv = join(DATA_DIR, 'validated.tsv')
+    full_df = pd.read_csv(full_tsv, sep='\t')
 
-    # Merge data excluding text with english characters
-    train_df = train_df[train_df.sentence.apply(contains_no_eng)]
-    test_df = test_df[test_df.sentence.apply(contains_no_eng)]
-    full_df = pd.concat([train_df, test_df])
+    # Exclude audios with english
+    full_df = full_df[full_df.sentence.apply(contains_no_eng)]
 
 
     ''' Prepare AM data '''
@@ -141,8 +139,9 @@ if __name__ == '__main__':
     full_df.drop(columns=drop_columns, inplace=True)
 
     # Split processed dataset to train/test set
-    train_df = full_df[:-len(test_df)]
-    test_df = full_df[-len(test_df):]
+    train_idx = np.random.rand(len(full_df)) < 0.8
+    train_df = full_df[train_idx]
+    test_df = full_df[~train_idx]
 
     # Sort train/test set by utt_id for kaldi-mfcc
     train_df = train_df.sort_values(by='utt_id')
